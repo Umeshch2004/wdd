@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Salary Information</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Employee Salary Information</h1>
+        <form id="salaryForm" onsubmit="return calculateSalary()">
+            <label for="employeeName">Employee Name:</label>
+            <input type="text" id="employeeName" name="employeeName" required>
+            <br>
+
+            <label for="employeeId">Employee ID:</label>
+            <input type="text" id="employeeId" name="employeeId" required>
+            <br>
+
+            <label for="basicPay">Basic Pay:</label>
+            <input type="number" id="basicPay" name="basicPay" required>
+            <br>
+
+            <input type="submit" value="Calculate Salary">
+        </form>
+
+        <div id="salaryReport"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#salaryReport {
+    margin-top: 20px;
+}
+
+
+function calculateSalary() {
+    const employeeName = document.getElementById('employeeName').value.trim();
+    const employeeId = document.getElementById('employeeId').value.trim();
+    const basicPay = parseFloat(document.getElementById('basicPay').value);
+
+    if (!employeeName || !employeeId || isNaN(basicPay)) {
+        alert('Please fill in all fields with valid values.');
+        return false;
+    }
+
+    const da = basicPay * 0.2; // DA is 20% of basic pay
+    const hra = basicPay * 0.3; // HRA is 30% of basic pay
+    const pf = basicPay * 0.1; // PF is 10% of basic pay
+    const tax = basicPay * 0.05; // TAX is 5% of basic pay
+
+    const grossPay = basicPay + da + hra; // Gross pay includes basic pay, DA, and HRA
+    const deduction = pf + tax; // Deduction includes PF and TAX
+    const netPay = grossPay - deduction; // Net pay is Gross pay minus Deduction
+
+    const salaryReport = `
+        <h2>Salary Report</h2>
+        <p><strong>Employee Name:</strong> ${employeeName}</p>
+        <p><strong>Employee ID:</strong> ${employeeId}</p>
+        <p><strong>Basic Pay:</strong> $${basicPay.toFixed(2)}</p>
+        <hr>
+        <p><strong>DA:</strong> $${da.toFixed(2)}</p>
+        <p><strong>HRA:</strong> $${hra.toFixed(2)}</p>
+        <p><strong>PF:</strong> $${pf.toFixed(2)}</p>
+        <p><strong>TAX:</strong> $${tax.toFixed(2)}</p>
+        <hr>
+        <p><strong>Gross Pay:</strong> $${grossPay.toFixed(2)}</p>
+        <p><strong>Deduction:</strong> $${deduction.toFixed(2)}</p>
+        <p><strong>Net Pay:</strong> $${netPay.toFixed(2)}</p>
+    `;
+
+    document.getElementById('salaryReport').innerHTML = salaryReport;
+
+    return false; // Prevent form submission
+}
