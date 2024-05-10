@@ -104,6 +104,9 @@
                 isValid = false;
             }
 
+            if (isValid) {
+                alert('Registration successful!');
+            }
             return isValid;
         }
 
