@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile List</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        img {
+            max-width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mobile List</h1>
+    <table id="mobile-table">
+        <thead>
+            <tr>
+                <th>Model Number</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody id="mobile-list"></tbody>
+    </table>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+JSON
+[
+    {
+        "model_number": "M123",
+        "name": "Samsung Galaxy S20",
+        "price": 999,
+        "image": "https://example.com/samsung-galaxy-s20.jpg"
+    },
+    {
+        "model_number": "M456",
+        "name": "iPhone 12 Pro",
+        "price": 1099,
+        "image": "https://example.com/iphone-12-pro.jpg"
+    },
+    {
+        "model_number": "M789",
+        "name": "Google Pixel 5",
+        "price": 799,
+        "image": "https://example.com/google-pixel-5.jpg"
+    }
+]
+
+script.js
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to fetch mobile data from JSON file using AJAX
+    function fetchMobileData() {
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    const mobiles = JSON.parse(xhr.responseText);
+                    displayMobiles(mobiles);
+                } else {
+                    console.error('Error fetching mobile data:', xhr.statusText);
+                }
+            }
+        };
+        xhr.open('GET', 'mobiles.json', true); // Path to your JSON file
+        xhr.send();
+    }
+
+    // Function to display mobiles in table format
+    function displayMobiles(mobiles) {
+        const mobileList = document.getElementById('mobile-list');
+        mobileList.innerHTML = '';
+
+        mobiles.forEach(mobile => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${mobile.model_number}</td>
+                <td>${mobile.name}</td>
+                <td>$${mobile.price}</td>
+                <td><img src="${mobile.image}" alt="${mobile.name}"></td>
+            `;
+            mobileList.appendChild(row);
+        });
+    }
+
+    // Fetch mobile data when the page loads
+    fetchMobileData();
+
+    // Optionally, you can add a button to fetch the data again on click
+    const refreshButton = document.createElement('button');
+    refreshButton.textContent = 'Refresh Mobile Data';
+    refreshButton.addEventListener('click', fetchMobileData);
+    document.body.appendChild(refreshButton);
+});
